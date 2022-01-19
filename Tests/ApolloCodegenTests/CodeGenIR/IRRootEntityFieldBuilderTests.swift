@@ -1919,6 +1919,265 @@ class IRRootEntityFieldBuilderTests: XCTestCase {
     expect(asPet).to(shallowlyMatch(asPetExpected))
   }
 
+  // MARK: Merged Selections - Nested Type Case
+
+  func test__mergedSelections__givenIsObjectType_givenNonMatchingTypeCasesInsideSiblingMatchingTypeCase_doesNotHaveTypeCaseForNestedTypeCase() throws {
+    // given
+    schemaSDL = """
+    type Query {
+      allAnimals: [Animal!]
+    }
+
+    interface Animal {
+      species: String
+    }
+
+    interface Pet {
+      predator: Animal
+    }
+
+    interface Amphibian {
+      skinCovering: String
+    }
+
+    type Cat implements Pet & Animal {
+      species: String
+      breed: String
+      predator: Animal
+    }
+    """
+
+    document = """
+    query Test {
+      allAnimals {
+        ... on Pet {
+          ... on Amphibian {
+            skinCovering
+          }
+        }
+        ... on Cat {
+          breed
+        }
+      }
+    }
+    """
+    // when
+    try buildSubjectRootField()
+
+    let allAnimals = subject[field: "allAnimals"]
+
+    let asCat_expected: SelectionMatcher = (
+      direct: [
+        .field(.mock("breed", type: .string())),
+      ],
+      merged: [
+      ]
+    )
+
+    expect(allAnimals?[as: "Cat"]).to(shallowlyMatch(asCat_expected))
+  }
+
+
+  func test__mergedSelections__givenIsObjectType_givenMatchingTypeCasesInsideSiblingMatchingTypeCase_doesNotHaveTypeCaseForNestedTypeCase_mergesNestedTypeCaseFieldsDirectly() throws {
+    // given
+    schemaSDL = """
+    type Query {
+      allAnimals: [Animal!]
+    }
+
+    interface Animal {
+      species: String
+    }
+
+    interface Pet {
+      predator: Animal
+    }
+
+    interface Mammal {
+      skinCovering: String
+    }
+
+    type Cat implements Pet & Mammal & Animal {
+      species: String
+      breed: String
+      predator: Animal
+      skinCovering: String
+    }
+    """
+
+    document = """
+    query Test {
+      allAnimals {
+        ... on Pet {
+          ... on Mammal {
+            skinCovering
+          }
+        }
+        ... on Cat {
+          breed
+        }
+      }
+    }
+    """
+
+    // when
+    try buildSubjectRootField()
+
+    let allAnimals = subject[field: "allAnimals"]
+
+    let asCat_expected: SelectionMatcher = (
+      direct: [
+        .field(.mock("breed", type: .string())),
+      ],
+      merged: [
+        .field(.mock("skinCovering", type: .string())),
+      ]
+    )
+
+    expect(allAnimals?[as: "Cat"]).to(shallowlyMatch(asCat_expected))
+  }
+
+  func test__mergedSelections__givenIsInterfaceType_givenNonMatchingTypeCasesInsideSiblingMatchingTypeCase_hasTypeCaseForNestedTypeCase() throws {
+    // given
+    schemaSDL = """
+    type Query {
+      allAnimals: [Animal!]
+    }
+
+    interface Animal {
+      species: String
+    }
+
+    interface Pet {
+      predator: Animal
+    }
+
+    interface Amphibian {
+      skinCovering: String
+    }
+
+    interface HousePet implements Pet & Animal {
+      species: String
+      breed: String
+      predator: Animal
+    }
+    """
+
+    document = """
+    query Test {
+      allAnimals {
+        ... on Pet {
+          ... on Amphibian {
+            skinCovering
+          }
+        }
+        ... on HousePet {
+          breed
+        }
+      }
+    }
+    """
+
+    // when
+    try buildSubjectRootField()
+
+    let Interface_Amphibian = try XCTUnwrap(schema[interface: "Amphibian"])
+
+    let allAnimals = subject[field: "allAnimals"]
+
+    let asHousePet_expected: SelectionMatcher = (
+      direct: [
+        .field(.mock("breed", type: .string())),
+      ],
+      merged: [
+        .inlineFragment(.mock(parentType: Interface_Amphibian))
+      ]
+    )
+
+    let asHousePet_asAmphibian_expected: SelectionMatcher = (
+      direct: [
+        .field(.mock("skinCovering", type: .string())),
+      ],
+      merged: [
+      ]
+    )
+
+    let asHousePet = allAnimals?[as: "HousePet"]
+    let asHousePet_asAmphibian = asHousePet?[as: "Amphibian"]
+
+    expect(asHousePet).to(shallowlyMatch(asHousePet_expected))
+    expect(asHousePet_asAmphibian).to(shallowlyMatch(asHousePet_asAmphibian_expected))
+  }
+
+  func test__mergedSelections__givenIsInterfaceType_givenNonMatchingTypeCasesInsideSiblingMatchingTypeCaseNestedTwoLevels_hasTypeCaseForNestedTypeCase() throws {
+    // given
+    schemaSDL = """
+    type Query {
+      allAnimals: [Animal!]
+    }
+
+    interface Animal {
+      species: String
+    }
+
+    interface Pet {
+      predator: Animal
+    }
+
+    interface Amphibian {
+      skinCovering: String
+    }
+
+    interface Reptile {
+      breed: String
+    }
+
+    interface HousePet implements Pet & Animal {
+      species: String
+      breed: String
+      predator: Animal
+    }
+    """
+
+    document = """
+    query Test {
+      allAnimals {
+        ... on Pet {
+          ... on Amphibian {
+            ... on Reptile {
+              breed
+            }
+          }
+        }
+        ... on HousePet {
+          ... on Amphibian {
+            skinCovering
+          }
+        }
+      }
+    }
+    """
+
+    // when
+    try buildSubjectRootField()
+
+    let Interface_Reptile = try XCTUnwrap(schema[interface: "Reptile"])
+
+    let allAnimals = subject[field: "allAnimals"]
+
+    let asHousePet_asAmphibian_expected: SelectionMatcher = (
+      direct: [
+        .field(.mock("breed", type: .string())),
+      ],
+      merged: [
+        .inlineFragment(.mock(parentType: Interface_Reptile))
+      ]
+    )
+
+    expect(allAnimals?[as: "HousePet"]?[as: "Amphibian"])
+      .to(shallowlyMatch(asHousePet_asAmphibian_expected))
+  }
+
   // MARK: - Merged Selections - Parent's Sibling
 
   func test__mergedSelections__givenIsNestedInterfaceType_uncleSelectionSetIsTheSameInterfaceType_mergesUncleSelections() throws {
@@ -3181,8 +3440,6 @@ class IRRootEntityFieldBuilderTests: XCTestCase {
     try buildSubjectRootField()
 
     let allAnimals = subject[field: "allAnimals"]
-
-    #warning("TODO: test type case inside type case?")
 
     expect(allAnimals?[as: "Cat"]?[field: "predator"]?[as: "Pet"]).toNot(beNil())
     expect(allAnimals?[as: "Cat"]?[as: "Reptile"]).to(beNil())
