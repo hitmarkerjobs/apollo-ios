@@ -52,12 +52,11 @@ extension IR {
     ) {
       guard let nextEntityTypePath = currentNodeRootTypePath.next else {
         // Advance to field node in current entity & type case
-        let fieldNode = node.childAsFieldScopeNode()
+        let fieldNode = node.childAsFieldScopeNode(rootType: currentNodeRootTypePath.value)
         mergeIn(
           selections: selections,
           withTypeScope: currentEntityScope.value.typePath.head,
-          toFieldNode: fieldNode,
-          ofType: currentNodeRootTypePath.value
+          toFieldNode: fieldNode
         )
         return
       }
@@ -96,31 +95,29 @@ extension IR {
     private func mergeIn(
       selections: IR.SortedSelections,
       withTypeScope currentSelectionScopeTypeCase: LinkedList<GraphQLCompositeType>.Node,
-      toFieldNode node: FieldScopeNode,
-      ofType fieldNodeType: GraphQLCompositeType
+      toFieldNode fieldNode: FieldScopeNode
     ) {
       guard let nextTypeCaseInScope = currentSelectionScopeTypeCase.next else {
         let typeForSelections = currentSelectionScopeTypeCase.value
 
-        if fieldNodeType == typeForSelections {
-          node.mergeIn(selections)
+        if fieldNode.type == typeForSelections {
+          fieldNode.mergeIn(selections)
           return
 
         } else {
-          let fieldTypeCaseNode = node.typeCaseNode(forType: typeForSelections)
+          let fieldTypeCaseNode = fieldNode.typeCaseNode(forType: typeForSelections)
           fieldTypeCaseNode.mergeIn(selections)
           return
         }
       }
 
-      let nextNodeForField = fieldNodeType != nextTypeCaseInScope.value
-      ? node.typeCaseNode(forType: nextTypeCaseInScope.value) : node
+      let nextNodeForField = fieldNode.type != nextTypeCaseInScope.value
+      ? fieldNode.typeCaseNode(forType: nextTypeCaseInScope.value) : fieldNode
 
       mergeIn(
         selections: selections,
         withTypeScope: nextTypeCaseInScope,
-        toFieldNode: nextNodeForField,
-        ofType: nextTypeCaseInScope.value
+        toFieldNode: nextNodeForField
       )
     }
 
@@ -188,9 +185,9 @@ extension IR {
         return child
       }
 
-      fileprivate func childAsFieldScopeNode() -> FieldScopeNode {
+      fileprivate func childAsFieldScopeNode(rootType: GraphQLCompositeType) -> FieldScopeNode {
         guard let child = child else {
-          let node = FieldScopeNode()
+          let node = FieldScopeNode(typePath: LinkedList(rootType))
           self.child = .fieldScope(node)
           return node
         }
@@ -223,10 +220,17 @@ extension IR {
     class FieldScopeNode: MergedSelectionTreeNode {
       var selections: ShallowSelections?
       var typeCases: OrderedDictionary<GraphQLCompositeType, FieldScopeNode>?
+      let typePath: LinkedList<GraphQLCompositeType>
+
+      var type: GraphQLCompositeType { typePath.last.value }
+
+      init(typePath: LinkedList<GraphQLCompositeType>) {
+        self.typePath = typePath
+      }
 
       fileprivate func mergeIn(_ selections: SortedSelections) {
         var fieldSelections = self.selections ?? ShallowSelections()
-        fieldSelections.mergeIn(selections)
+        fieldSelections.mergeIn(selections)        
         self.selections = fieldSelections
       }
 
@@ -252,13 +256,13 @@ extension IR {
 
       fileprivate func typeCaseNode(forType type: GraphQLCompositeType) -> FieldScopeNode {
         guard var typeCases = typeCases else {
-          let node = FieldScopeNode()
+          let node = FieldScopeNode(typePath: self.typePath.appending(type))
           self.typeCases = [type: node]
           return node
         }
 
         guard let node = typeCases[type] else {
-          let node = FieldScopeNode()
+          let node = FieldScopeNode(typePath: self.typePath.appending(type))
           typeCases[type] = node
           self.typeCases = typeCases
           return node
