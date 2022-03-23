@@ -37,7 +37,7 @@ public final class SQLiteNormalizedCache {
   }
   
   private func recordCacheKey(forFieldCacheKey fieldCacheKey: CacheKey) -> CacheKey {
-    let components = fieldCacheKey.splitIntoCacheKeyComponents()
+    let components = fieldCacheKey.components(separatedBy: ".")
     var updatedComponents = [String]()
     if components.first?.contains("_ROOT") == true {
       for component in components {
@@ -108,53 +108,8 @@ extension SQLiteNormalizedCache: NormalizedCache {
   public func removeRecord(for key: CacheKey) throws {
     try self.database.deleteRecord(for: key)
   }
-
-  public func removeRecords(matching pattern: CacheKey) throws {
-    try self.database.deleteRecords(matching: pattern)
-  }
   
   public func clear() throws {
     try self.database.clearDatabase(shouldVacuumOnClear: self.shouldVacuumOnClear)
-  }
-}
-
-extension String {
-  private var isBalanced: Bool {
-    guard contains("(") || contains(")") else { return true }
-
-    var stack = [Character]()
-    for character in self where ["(", ")"].contains(character) {
-      if character == "(" {
-        stack.append(character)
-      } else if !stack.isEmpty && character == ")" {
-        _ = stack.popLast()
-      }
-    }
-
-    return stack.isEmpty
-  }
-
-  func splitIntoCacheKeyComponents() -> [String] {
-    var result = [String]()
-    var unbalancedString = ""
-    let tmp = split(separator: ".", omittingEmptySubsequences: false)
-    tmp
-      .enumerated()
-      .forEach { index, item in
-        let value = String(item)
-        if value.isBalanced && unbalancedString == "" {
-          result.append(value)
-        } else {
-          unbalancedString += unbalancedString == "" ? value : ".\(value)"
-          if unbalancedString.isBalanced {
-            result.append(unbalancedString)
-            unbalancedString = ""
-          }
-        }
-        if unbalancedString != "" && index == tmp.count - 1 {
-          result.append(unbalancedString)
-        }
-      }
-    return result
   }
 }

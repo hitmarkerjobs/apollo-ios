@@ -36,7 +36,7 @@ public final class SQLiteDotSwiftDatabase: SQLiteDatabase {
   
   public func selectRawRows(forKeys keys: Set<CacheKey>) throws -> [DatabaseRow] {
     let query = self.records.filter(keys.contains(keyColumn))
-    return try self.db.prepareRowIterator(query).map { row in
+    return try self.db.prepare(query).map { row in
       let record = row[self.recordColumn]
       let key = row[self.keyColumn]
       
@@ -50,13 +50,6 @@ public final class SQLiteDotSwiftDatabase: SQLiteDatabase {
   
   public func deleteRecord(for cacheKey: CacheKey) throws {
     let query = self.records.filter(keyColumn == cacheKey)
-    try self.db.run(query.delete())
-  }
-
-  public func deleteRecords(matching pattern: CacheKey) throws {
-    let wildcardPattern = "%\(pattern)%"
-    let query = self.records.filter(keyColumn.like(wildcardPattern))
-
     try self.db.run(query.delete())
   }
   

@@ -1,6 +1,7 @@
 import XCTest
 import Apollo
 import ApolloTestSupport
+import Starscream
 @testable import ApolloWebSocket
 
 class WebSocketTransportTests: XCTestCase {
@@ -17,8 +18,7 @@ class WebSocketTransportTests: XCTestCase {
     var request = URLRequest(url: TestURL.mockServer.url)
     request.addValue("OldToken", forHTTPHeaderField: "Authorization")
 
-    self.webSocketTransport = WebSocketTransport(websocket: MockWebSocket(request: request),
-                                                 store: ApolloStore())
+    self.webSocketTransport = WebSocketTransport(request: request)
 
     self.webSocketTransport.updateHeaderValues(["Authorization": "UpdatedToken"])
 
@@ -26,10 +26,9 @@ class WebSocketTransportTests: XCTestCase {
   }
 
   func testUpdateConnectingPayload() {
-    let request = URLRequest(url: TestURL.mockServer.url)
+    WebSocketTransport.provider = MockWebSocket.self
 
-    self.webSocketTransport = WebSocketTransport(websocket: MockWebSocket(request: request),
-                                                 store: ApolloStore(),
+    self.webSocketTransport = WebSocketTransport(request: URLRequest(url: TestURL.mockServer.url),
                                                  connectingPayload: ["Authorization": "OldToken"])
 
     let mockWebSocketDelegate = MockWebSocketDelegate()
@@ -57,10 +56,9 @@ class WebSocketTransportTests: XCTestCase {
   }
 
   func testCloseConnectionAndInit() {
-    let request = URLRequest(url: TestURL.mockServer.url)
+    WebSocketTransport.provider = MockWebSocket.self
 
-    self.webSocketTransport = WebSocketTransport(websocket: MockWebSocket(request: request),
-                                                 store: ApolloStore(),
+    self.webSocketTransport = WebSocketTransport(request: URLRequest(url: TestURL.mockServer.url),
                                                  connectingPayload: ["Authorization": "OldToken"])
     self.webSocketTransport.closeConnection()
     self.webSocketTransport.updateConnectingPayload(["Authorization": "UpdatedToken"])
@@ -71,6 +69,21 @@ class WebSocketTransportTests: XCTestCase {
     if result == XCTWaiter.Result.timedOut {
     } else {
       XCTFail("Delay interrupted")
+    }
+  }
+}
+
+private final class MockWebSocketDelegate: WebSocketDelegate {
+  
+  var didReceiveMessage: ((String) -> Void)?
+
+  func didReceive(event: WebSocketEvent, client: WebSocket) {
+    switch event {
+    case .text(let message):
+      didReceiveMessage?(message)
+    default:
+      // No-op, this is a mock socket.
+      break
     }
   }
 }

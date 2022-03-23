@@ -2,34 +2,21 @@
 
 ## Protocols
 
--   [OperationMessageIdCreator](protocols/OperationMessageIdCreator/)
--   [SSLTrustValidator](protocols/SSLTrustValidator/)
--   [WebSocketClient](protocols/WebSocketClient/)
--   [WebSocketClientDelegate](protocols/WebSocketClientDelegate/)
+-   [ApolloWebSocketClient](protocols/ApolloWebSocketClient/)
 -   [WebSocketTransportDelegate](protocols/WebSocketTransportDelegate/)
 
 ## Structs
 
--   [ApolloSequencedOperationMessageIdCreator](structs/ApolloSequencedOperationMessageIdCreator/)
--   [SSLClientCertificateError](structs/SSLClientCertificateError/)
--   [SSLSettings](structs/SSLSettings/)
--   [WebSocket.WSError](structs/WebSocket.WSError/)
 -   [WebSocketError](structs/WebSocketError/)
 
 ## Classes
 
--   [SSLCert](classes/SSLCert/)
--   [SSLClientCertificate](classes/SSLClientCertificate/)
--   [SSLSecurity](classes/SSLSecurity/)
+-   [ApolloWebSocket](classes/ApolloWebSocket/)
 -   [SplitNetworkTransport](classes/SplitNetworkTransport/)
--   [WebSocket](classes/WebSocket/)
 -   [WebSocketTransport](classes/WebSocketTransport/)
 
 ## Enums
 
--   [WSError.ErrorType](enums/WSError.ErrorType/)
--   [WebSocket.OpCode](enums/WebSocket.OpCode/)
--   [WebSocket.WSProtocol](enums/WebSocket.WSProtocol/)
 -   [WebSocketError.ErrorKind](enums/WebSocketError.ErrorKind/)
 
 ## Extensions

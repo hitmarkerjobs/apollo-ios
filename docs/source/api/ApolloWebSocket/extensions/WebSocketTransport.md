@@ -27,59 +27,14 @@ public func send<Operation: GraphQLOperation>(
 | callbackQueue | The queue to call back on with the results. Should default to `.main`. |
 | completionHandler | A closure to call when a request completes. On `success` will contain the response received from the server. On `failure` will contain the error which occurred. |
 
-### `websocketDidConnect(socket:)`
+### `didReceive(event:client:)`
 
 ```swift
-public func websocketDidConnect(socket: WebSocketClient)
+public func didReceive(event: WebSocketEvent, client: WebSocket)
 ```
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| socket | The `WebSocketClient` that sent the delegate event. |
 
 ### `handleConnection()`
 
 ```swift
 public func handleConnection()
 ```
-
-### `websocketDidDisconnect(socket:error:)`
-
-```swift
-public func websocketDidDisconnect(socket: WebSocketClient, error: Error?)
-```
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| socket | The `WebSocketClient` that sent the delegate event. |
-| error | An optional error if an error occured. |
-
-### `websocketDidReceiveMessage(socket:text:)`
-
-```swift
-public func websocketDidReceiveMessage(socket: WebSocketClient, text: String)
-```
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| socket | The `WebSocketClient` that sent the delegate event. |
-| text | The text received from the server. |
-
-### `websocketDidReceiveData(socket:data:)`
-
-```swift
-public func websocketDidReceiveData(socket: WebSocketClient, data: Data)
-```
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| socket | The `WebSocketClient` that sent the delegate event. |
-| data | The data received from the server. |

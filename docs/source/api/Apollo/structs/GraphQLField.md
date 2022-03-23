@@ -15,9 +15,3 @@ public init(_ name: String,
             arguments: FieldArguments? = nil,
             type: GraphQLOutputType)
 ```
-
-### `cacheKey(with:)`
-
-```swift
-public func cacheKey(with variables: [String: JSONEncodable]?) throws -> String
-```

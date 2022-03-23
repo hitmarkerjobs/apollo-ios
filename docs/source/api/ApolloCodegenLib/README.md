@@ -1,23 +1,34 @@
 # Reference Documentation
 
+## Protocols
+
+-   [FlexibleDecoder](protocols/FlexibleDecoder/)
+
 ## Structs
 
 -   [ApolloCLI](structs/ApolloCLI/)
 -   [ApolloCodegenOptions](structs/ApolloCodegenOptions/)
--   [ApolloSchemaDownloadConfiguration](structs/ApolloSchemaDownloadConfiguration/)
--   [ApolloSchemaDownloadConfiguration.HTTPHeader](structs/ApolloSchemaDownloadConfiguration.HTTPHeader/)
 -   [ApolloSchemaDownloader](structs/ApolloSchemaDownloader/)
+-   [ApolloSchemaOptions](structs/ApolloSchemaOptions/)
 -   [Basher](structs/Basher/)
 -   [CodegenLogger](structs/CodegenLogger/)
--   [DownloadMethod.ApolloRegistrySettings](structs/DownloadMethod.ApolloRegistrySettings/)
+-   [DownloadMethod.RegistrySettings](structs/DownloadMethod.RegistrySettings/)
+-   [EnumGenerator.SanitizedEnumValue](structs/EnumGenerator.SanitizedEnumValue/)
 -   [FileFinder](structs/FileFinder/)
 -   [GraphQLSourceLocation](structs/GraphQLSourceLocation/)
+-   [InputObjectGenerator.SanitizedInputObject](structs/InputObjectGenerator.SanitizedInputObject/)
+-   [InterfaceEnumGenerator.SanitizedInterfaceObject](structs/InterfaceEnumGenerator.SanitizedInterfaceObject/)
+-   [SanitizedInputObject.SanitizedInputObjectField](structs/SanitizedInputObject.SanitizedInputObjectField/)
+-   [SanitizedInterfaceObject.SanitizedCase](structs/SanitizedInterfaceObject.SanitizedCase/)
+-   [SanitizedUnionObject.SanitizedCase](structs/SanitizedUnionObject.SanitizedCase/)
+-   [UnionEnumGenerator.SanitizedUnionObject](structs/UnionEnumGenerator.SanitizedUnionObject/)
 
 ## Classes
 
 -   [ASTNode](classes/ASTNode/)
 -   [ApolloCodegen](classes/ApolloCodegen/)
 -   [ApolloCodegenFrontend](classes/ApolloCodegenFrontend/)
+-   [CodeGenerator](classes/CodeGenerator/)
 -   [CompilationResult](classes/CompilationResult/)
 -   [CompilationResult.Argument](classes/CompilationResult.Argument/)
 -   [CompilationResult.Field](classes/CompilationResult.Field/)
@@ -27,6 +38,7 @@
 -   [CompilationResult.OperationDefinition](classes/CompilationResult.OperationDefinition/)
 -   [CompilationResult.SelectionSet](classes/CompilationResult.SelectionSet/)
 -   [CompilationResult.VariableDefinition](classes/CompilationResult.VariableDefinition/)
+-   [EnumGenerator](classes/EnumGenerator/)
 -   [GraphQLAbstractType](classes/GraphQLAbstractType/)
 -   [GraphQLCompositeType](classes/GraphQLCompositeType/)
 -   [GraphQLDocument](classes/GraphQLDocument/)
@@ -44,8 +56,11 @@
 -   [GraphQLSchemaValidationError](classes/GraphQLSchemaValidationError/)
 -   [GraphQLSource](classes/GraphQLSource/)
 -   [GraphQLUnionType](classes/GraphQLUnionType/)
+-   [InputObjectGenerator](classes/InputObjectGenerator/)
+-   [InterfaceEnumGenerator](classes/InterfaceEnumGenerator/)
 -   [JavaScriptError](classes/JavaScriptError/)
 -   [JavaScriptObject](classes/JavaScriptObject/)
+-   [UnionEnumGenerator](classes/UnionEnumGenerator/)
 
 ## Enums
 
@@ -54,24 +69,42 @@
 -   [ApolloCodegenOptions.CodeGenerationEngine](enums/ApolloCodegenOptions.CodeGenerationEngine/)
 -   [ApolloCodegenOptions.CustomScalarFormat](enums/ApolloCodegenOptions.CustomScalarFormat/)
 -   [ApolloCodegenOptions.OutputFormat](enums/ApolloCodegenOptions.OutputFormat/)
--   [ApolloSchemaDownloadConfiguration.DownloadMethod](enums/ApolloSchemaDownloadConfiguration.DownloadMethod/)
--   [ApolloSchemaDownloader.SchemaDownloadError](enums/ApolloSchemaDownloader.SchemaDownloadError/)
+-   [ApolloSchemaOptions.DownloadMethod](enums/ApolloSchemaOptions.DownloadMethod/)
+-   [ApolloSchemaOptions.SchemaFileType](enums/ApolloSchemaOptions.SchemaFileType/)
 -   [ApolloURLError](enums/ApolloURLError/)
 -   [Basher.BashError](enums/Basher.BashError/)
 -   [CodegenLogger.LogLevel](enums/CodegenLogger.LogLevel/)
 -   [CompilationResult.OperationType](enums/CompilationResult.OperationType/)
 -   [CompilationResult.Selection](enums/CompilationResult.Selection/)
--   [DownloadMethod.HTTPMethod](enums/DownloadMethod.HTTPMethod/)
+-   [EnumGenerator.EnumContextKey](enums/EnumGenerator.EnumContextKey/)
+-   [EnumGenerator.EnumGenerationError](enums/EnumGenerator.EnumGenerationError/)
 -   [GraphQLType](enums/GraphQLType/)
+-   [InflectionRule](enums/InflectionRule/)
+-   [InputObjectGenerator.InputObjectEnvironmentKey](enums/InputObjectGenerator.InputObjectEnvironmentKey/)
+-   [InterfaceEnumGenerator.InterfaceEnumContextKey](enums/InterfaceEnumGenerator.InterfaceEnumContextKey/)
+-   [JSONValue](enums/JSONValue/)
+-   [JSONValue.JSONValueError](enums/JSONValue.JSONValueError/)
+-   [UnionEnumGenerator.InterfaceEnumContextKey](enums/UnionEnumGenerator.InterfaceEnumContextKey/)
 
 ## Extensions
 
 -   [ApolloCodegenOptions](extensions/ApolloCodegenOptions/)
 -   [ApolloExtension](extensions/ApolloExtension/)
--   [ApolloSchemaDownloadConfiguration](extensions/ApolloSchemaDownloadConfiguration/)
+-   [ApolloSchemaOptions](extensions/ApolloSchemaOptions/)
+-   [Decodable](extensions/Decodable/)
 -   [FileHandle](extensions/FileHandle/)
 -   [GraphQLType](extensions/GraphQLType/)
+-   [JSONValue](extensions/JSONValue/)
 -   [JavaScriptError](extensions/JavaScriptError/)
 -   [JavaScriptObject](extensions/JavaScriptObject/)
+
+## Typealiases
+
+-   [JSONDecoder.Input](typealiases/JSONDecoder.Input/)
+-   [JSONValue.BooleanLiteralType](typealiases/JSONValue.BooleanLiteralType/)
+-   [JSONValue.FloatLiteralType](typealiases/JSONValue.FloatLiteralType/)
+-   [JSONValue.IntegerLiteralType](typealiases/JSONValue.IntegerLiteralType/)
+-   [JSONValue.StringLiteralType](typealiases/JSONValue.StringLiteralType/)
+-   [PropertyListDecoder.Input](typealiases/PropertyListDecoder.Input/)
 
 This file was generated by [SourceDocs](https://github.com/eneko/SourceDocs)

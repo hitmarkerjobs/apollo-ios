@@ -2,8 +2,18 @@
 
 # `ApolloExtension`
 ```swift
-extension ApolloExtension where Base == FileManager
+public extension ApolloExtension where Base: DictionaryType, Base.KeyType: RawRepresentable, Base.KeyType.RawValue == String, Base.ValueType: Any
 ```
+
+## Properties
+### `toStringKeyedDict`
+
+```swift
+var toStringKeyedDict: [String: Any]
+```
+
+Transforms a dictionary keyed by a String enum into a dictionary keyed by the
+string values of that enum.
 
 ## Methods
 ### `fileExists(at:)`

@@ -2,16 +2,9 @@ import Foundation
 @testable import Apollo
 
 public final class MockNetworkTransport: RequestChainNetworkTransport {
-  public init(
-    server: MockGraphQLServer = MockGraphQLServer(),
-    store: ApolloStore = ApolloStore(),
-    clientName: String = "MockNetworkTransport_ClientName",
-    clientVersion: String = "MockNetworkTransport_ClientVersion"
-  ) {
+  public init(server: MockGraphQLServer, store: ApolloStore) {
     super.init(interceptorProvider: TestInterceptorProvider(store: store, server: server),
                endpointURL: TestURL.mockServer.url)
-    self.clientName = clientName
-    self.clientVersion = clientVersion
   }
   
   struct TestInterceptorProvider: InterceptorProvider {
@@ -21,12 +14,12 @@ public final class MockNetworkTransport: RequestChainNetworkTransport {
     func interceptors<Operation>(for operation: Operation) -> [ApolloInterceptor] where Operation: GraphQLOperation {
       return [
         MaxRetryInterceptor(),
-        CacheReadInterceptor(store: self.store),
+        LegacyCacheReadInterceptor(store: self.store),
         MockGraphQLServerInterceptor(server: server),
         ResponseCodeInterceptor(),
-        JSONResponseParsingInterceptor(cacheKeyForObject: self.store.cacheKeyForObject),
+        LegacyParsingInterceptor(cacheKeyForObject: self.store.cacheKeyForObject),
         AutomaticPersistedQueryInterceptor(),
-        CacheWriteInterceptor(store: self.store),
+        LegacyCacheWriteInterceptor(store: self.store),
       ]
     }
   }
@@ -68,24 +61,5 @@ private class MockGraphQLServerInterceptor: ApolloInterceptor {
                            completion: completion)
       }
     }
-  }
-}
-
-public class MockWebSocketTransport: NetworkTransport {
-  public var clientName, clientVersion: String
-
-  public init(clientName: String, clientVersion: String) {
-    self.clientName = clientName
-    self.clientVersion = clientVersion
-  }
-
-  public func send<Operation>(
-    operation: Operation,
-    cachePolicy: CachePolicy,
-    contextIdentifier: UUID?,
-    callbackQueue: DispatchQueue,
-    completionHandler: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void
-  ) -> Cancellable where Operation : GraphQLOperation {
-    return MockTask()
   }
 }

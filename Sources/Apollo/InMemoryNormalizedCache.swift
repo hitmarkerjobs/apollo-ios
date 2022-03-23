@@ -21,10 +21,6 @@ public final class InMemoryNormalizedCache: NormalizedCache {
     return records.merge(records: newRecords)
   }
 
-  public func removeRecords(matching pattern: CacheKey) throws {
-    records.removeRecords(matching: pattern)
-  }
-
   public func clear() {
     records.clear()
   }

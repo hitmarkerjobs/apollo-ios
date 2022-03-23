@@ -21,11 +21,7 @@ class StarWarsWebSocketTests: XCTestCase, CacheDependentTesting {
     cache = try makeNormalizedCache()
     let store = ApolloStore(cache: cache)
     
-    let networkTransport = WebSocketTransport(
-      websocket: WebSocket(request: URLRequest(url: TestServerURL.starWarsWebSocket.url),
-                           protocol: .graphql_ws),
-      store: store
-    )
+    let networkTransport = WebSocketTransport(request: URLRequest(url: TestServerURL.starWarsWebSocket.url))
     
     client = ApolloClient(networkTransport: networkTransport, store: store)
   }

@@ -57,7 +57,7 @@ public class MockGraphQLServer {
   }
   
   private let queue = DispatchQueue(label: "com.apollographql.MockGraphQLServer")
-
+    
   public init() { }
   
   // Since RequestExpectation is generic over a specific GraphQLOperation, we can't store these in the dictionary
@@ -87,20 +87,16 @@ public class MockGraphQLServer {
   }
   
   func serve<Operation>(request: HTTPRequest<Operation>, completionHandler: @escaping (Result<JSONObject, Error>) -> Void) where Operation: GraphQLOperation {
-    let operationType = type(of: request.operation)
-
-    if let expectation = self[operationType] {
-      // Dispatch after a small random delay to spread out concurrent requests and simulate somewhat real-world conditions.
-      queue.asyncAfter(deadline: .now() + .milliseconds(Int.random(in: 10...50))) {
+    // Dispatch after a small random delay to spread out concurrent requests and simulate somewhat real-world conditions.
+    queue.asyncAfter(deadline: .now() + .milliseconds(Int.random(in: 10...50))) {
+      let operationType = type(of: request.operation)
+      
+      if let expectation = self[operationType] {
         completionHandler(.success(expectation.handler(request)))
         expectation.fulfill()
-      }
-
-    } else {
-      queue.async {
+      } else {
         completionHandler(.failure(ServerError.unexpectedRequest(String(describing: operationType))))
       }
     }
-
   }
 }

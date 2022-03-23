@@ -2,6 +2,7 @@
 import Apollo
 #endif
 import Foundation
+import Starscream
 
 /// A task to wrap sending/canceling operations over a websocket.
 final class WebSocketTask<Operation: GraphQLOperation>: Cancellable {

@@ -15,7 +15,7 @@ class UploadTests: XCTestCase {
 
     client = {
       let store = ApolloStore()
-      let provider = DefaultInterceptorProvider(store: store)
+      let provider = LegacyInterceptorProvider(store: store)
       let transport = RequestChainNetworkTransport(interceptorProvider: provider,
                                                    endpointURL: Self.uploadClientURL,
                                                    additionalHeaders: ["headerKey": "headerValue"])

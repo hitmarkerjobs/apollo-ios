@@ -1,19 +1,6 @@
 [build]
-  ignore = "exit 0"
-
+  base    = "docs/"
+  publish = "docs/public/"
+  command = "gatsby build --prefix-paths && mkdir -p docs/ios && mv public/* docs/ios && mv docs public/ && mv public/docs/ios/_redirects public"
 [build.environment]
-  NODE_VERSION = "16"
-
-[context.deploy-preview.build]
-  base = "docs"
-  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ."
-  command = """\
-  cd ../
-  rm -rf monodocs
-  git clone https://github.com/apollographql/docs --branch main --single-branch monodocs
-  cd monodocs
-  npm i
-  cp -r ../docs local
-  DOCS_LOCAL=true npm run build \
-  """
-  publish = "../monodocs/public"
+  NPM_VERSION = "6"

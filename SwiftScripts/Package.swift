@@ -6,12 +6,12 @@ import PackageDescription
 let package = Package(
     name: "Codegen",
     platforms: [
-        .macOS(.v10_15)
+        .macOS(.v10_14)
     ],
     dependencies: [
         .package(name: "Apollo", path: ".."),
-        .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMinor(from: "1.0.2")),
-        .package(url: "https://github.com/eneko/SourceDocs.git", .upToNextMinor(from: "2.0.0"))
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.3.0"),
+        .package(url: "https://github.com/eneko/SourceDocs.git", .upToNextMinor(from: "1.2.0"))
     ],
     targets: [
         .target(name: "Codegen",

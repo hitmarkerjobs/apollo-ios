@@ -2,6 +2,5 @@
   "packageFiles": ["docs/package.json"],
   "extends": [
     "apollo-docs"
-  ],
-  "labels": ["dependency-management"]
+  ]
 }

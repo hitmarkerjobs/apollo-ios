@@ -8,7 +8,6 @@ import {
   GraphQLError,
   validate,
   buildASTSchema,
-  printSchema,
 } from "graphql";
 import { defaultValidationRules } from "./validationRules";
 import { compileToIR, CompilationResult } from "./compiler";
@@ -55,10 +54,6 @@ export function loadSchemaFromSDL(source: Source): GraphQLSchema {
   assertValidSchema(schema);
 
   return schema;
-}
-
-export function printSchemaToSDL(schema: GraphQLSchema): string {
-  return printSchema(schema)
 }
 
 export function parseDocument(source: Source): DocumentNode {

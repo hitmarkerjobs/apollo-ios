@@ -64,8 +64,6 @@ const server = new ApolloServer({
   }
 });
 
-server.listen({
-  port: 4001
-}).then(({ url }) => {
+server.listen().then(({ url }) => {
   console.info(`Upload server started at ${url}`);
 });

@@ -40,39 +40,7 @@ public func clearCache(callbackQueue: DispatchQueue = .main, completion: ((Resul
 
 Clears the instance of the cache. Note that a cache can be shared across multiple `ApolloClient` objects, so clearing that underlying cache will clear it for all clients.
 
-- Parameters:
-  - callbackQueue: The queue to call the completion block on. Defaults to `DispatchQueue.main`.
-  - completion: [optional] A completion block to be called after records are merged into the cache.
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| callbackQueue | The queue to call the completion block on. Defaults to `DispatchQueue.main`. |
-| completion | [optional] A completion block to be called after records are merged into the cache. |
-
-### `publish(records:identifier:callbackQueue:completion:)`
-
-```swift
-public func publish(records: RecordSet, identifier: UUID? = nil, callbackQueue: DispatchQueue = .main, completion: ((Result<Void, Error>) -> Void)? = nil)
-```
-
-Merges a `RecordSet` into the normalized cache.
-- Parameters:
-  - records: The records to be merged into the cache.
-  - identifier: [optional] A unique identifier for the request that kicked off this change,
-                to assist in de-duping cache hits for watchers.
-  - callbackQueue: The queue to call the completion block on. Defaults to `DispatchQueue.main`.
-  - completion: [optional] A completion block to be called after records are merged into the cache.
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| records | The records to be merged into the cache. |
-| identifier | [optional] A unique identifier for the request that kicked off this change, to assist in de-duping cache hits for watchers. |
-| callbackQueue | The queue to call the completion block on. Defaults to `DispatchQueue.main`. |
-| completion | [optional] A completion block to be called after records are merged into the cache. |
+- Returns: A promise which fulfills when the Cache is cleared.
 
 ### `withinReadTransaction(_:callbackQueue:completion:)`
 

@@ -17,11 +17,10 @@ case typescript
 
 The default, tried and true code generation engine
 
-## Properties
-### `default`
+### `swiftExperimental`
 
 ```swift
-public static var `default`: CodeGenerationEngine
+case swiftExperimental
 ```
 
-The current default for the code generation engine.
+The VERY WORK IN PROGRESS Swift code generation engine. Use at your own risk!

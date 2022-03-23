@@ -15,9 +15,6 @@
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "StarWarsSubscriptionTests\/testConcurrentSubscribing()"
-      ],
       "target" : {
         "containerPath" : "container:Apollo.xcodeproj",
         "identifier" : "DE6B15AB26152BE10068D642",

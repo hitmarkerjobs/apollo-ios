@@ -27,7 +27,7 @@ public extension ApolloExtension where Base == DispatchQueue {
         action(result)
       }
     } else if case .failure(let error) = result {
-      debugPrint("Apollo: Encountered failure result, but no completion handler was defined to handle it: \(error)")
+      assertionFailure("Encountered failure result, but no completion handler was defined to handle it: \(error)")
     }
   }
 }

@@ -64,7 +64,7 @@ class CacheDependentInterceptorTests: XCTestCase, CacheDependentTesting {
     }
     
     
-    class TestProvider: DefaultInterceptorProvider {
+    class TestProvider: LegacyInterceptorProvider {
       init(store: ApolloStore) {
         super.init(client: self.mockClient,
                    store: store)

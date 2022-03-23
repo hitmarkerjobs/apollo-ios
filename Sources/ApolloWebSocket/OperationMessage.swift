@@ -7,21 +7,15 @@ final class OperationMessage {
   enum Types : String {
     case connectionInit = "connection_init"            // Client -> Server
     case connectionTerminate = "connection_terminate"  // Client -> Server
-    case subscribe = "subscribe"                       // Client -> Server
     case start = "start"                               // Client -> Server
     case stop = "stop"                                 // Client -> Server
 
     case connectionAck = "connection_ack"              // Server -> Client
     case connectionError = "connection_error"          // Server -> Client
-    case startAck = "start_ack"                        // Server -> Client
     case connectionKeepAlive = "ka"                    // Server -> Client
     case data = "data"                                 // Server -> Client
     case error = "error"                               // Server -> Client
     case complete = "complete"                         // Server -> Client
-    case next = "next"                                 // Server -> Client
-
-    case ping = "ping"                                 // Bidirectional
-    case pong = "pong"                                 // Bidirectional
   }
 
   let serializationFormat = JSONSerializationFormat.self
@@ -39,7 +33,7 @@ final class OperationMessage {
 
   init(payload: GraphQLMap? = nil,
        id: String? = nil,
-       type: Types) {
+       type: Types = .start) {
     var message: GraphQLMap = [:]
     if let payload = payload {
       message["payload"] = payload
@@ -82,7 +76,7 @@ final class OperationMessage {
     var payload : JSONObject?
 
     do {
-      let json = try serializationFormat.deserialize(data: data) as? JSONObject
+      let json = try JSONSerializationFormat.deserialize(data: data ) as? JSONObject
 
       id = json?["id"] as? String
       type = json?["type"] as? String
@@ -104,13 +98,8 @@ final class OperationMessage {
   }
 }
 
-extension OperationMessage: CustomDebugStringConvertible {
-  var debugDescription: String {
-    rawMessage!
-  }
-}
-
 struct ParseHandler {
+
   let type: String?
   let id: String?
   let payload: JSONObject?

@@ -19,7 +19,7 @@ class SplitNetworkTransportTests: XCTestCase {
   private static let webSocketVersion = "TestWebSocketTransportVersion"
   
   private var mockTransport: MockNetworkTransport!
-  private var webSocketTransport: MockWebSocketTransport!
+  private var webSocketTransport: WebSocketTransport!
   private var splitTransport: SplitNetworkTransport!
 
   override func setUp() {
@@ -33,10 +33,12 @@ class SplitNetworkTransportTests: XCTestCase {
       return transport
     }()
 
-    webSocketTransport = MockWebSocketTransport(
-      clientName: Self.webSocketName,
-      clientVersion: Self.webSocketVersion
-    )
+    webSocketTransport = {
+      let request = URLRequest(url: TestURL.mockServer.url)
+      return WebSocketTransport(request: request,
+                                clientName: Self.webSocketName,
+                                clientVersion: Self.webSocketVersion)
+    }()
 
     splitTransport = SplitNetworkTransport(
       uploadingNetworkTransport: mockTransport,

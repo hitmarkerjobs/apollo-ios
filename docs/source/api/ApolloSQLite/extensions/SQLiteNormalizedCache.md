@@ -42,18 +42,6 @@ public func removeRecord(for key: CacheKey) throws
 | ---- | ----------- |
 | key | The cache key to remove the record for |
 
-### `removeRecords(matching:)`
-
-```swift
-public func removeRecords(matching pattern: CacheKey) throws
-```
-
-#### Parameters
-
-| Name | Description |
-| ---- | ----------- |
-| pattern | The pattern that will be applied to find matching keys. |
-
 ### `clear()`
 
 ```swift

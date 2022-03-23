@@ -97,14 +97,6 @@ public struct CodegenTestHelper {
       .appendingPathComponent("Output")
   }
   
-  public static func schemaFolderURL() -> URL {
-    let sourceRoot = self.sourceRootURL()
-    return sourceRoot
-      .appendingPathComponent("Tests")
-      .appendingPathComponent("ApolloCodegenTests")
-      .appendingPathComponent("Schema")
-  }
-  
   public static func deleteExistingOutputFolder(file: StaticString = #filePath,
                                          line: UInt = #line) {
     do {
@@ -121,7 +113,7 @@ public struct CodegenTestHelper {
                                   line: UInt = #line) {
     do {
       let cliFolderURL = self.cliFolderURL()
-      try CLIDownloader.downloadIfNeeded(to: cliFolderURL, timeout: CodegenTestHelper.timeout)
+      try CLIDownloader.downloadIfNeeded(cliFolderURL: cliFolderURL, timeout: CodegenTestHelper.timeout)
     } catch {
       XCTFail("Error downloading CLI if needed: \(error)",
               file: file,

@@ -19,14 +19,6 @@ There are two different classes which conform to the [`NetworkTransport` protoco
 
 Typically, you'll want to use `SplitNetworkTransport`, since this allows you to retain the single `NetworkTransport` setup and avoids any potential issues of using multiple client objects. 
 
-## GraphQL over WebSocket protocols
-
-There are two protocols supported by apollo-ios:
-1. [`graphql-ws`](https://github.com/apollographql/subscriptions-transport-ws/blob/master/PROTOCOL.md) protocol which is implemented in the [subscriptions-transport-ws](https://github.com/apollographql/subscriptions-transport-ws) and [AWS AppSync](https://docs.aws.amazon.com/appsync/latest/devguide/real-time-websocket-client.html#handshake-details-to-establish-the-websocket-connection) libraries.
-2. [`graphql-transport-ws`](https://github.com/enisdenjo/graphql-ws/blob/master/PROTOCOL.md) protocol which is implemented in the [graphql-ws](https://github.com/enisdenjo/graphql-ws) library.
-
-It is important to note that the protocols are not cross-compatible and you will need to know which is implemented in the service you're connecting to. All `WebSocket` initializers allow you to specify which GraphQL over WebSocket protocol should be used.
-
 ## Sample subscription-supporting initializer 
 
 Here is an example of setting up a singleton similar to the [Example Advanced Client Setup](initialization/#advanced-client-creation), but which uses a `SplitNetworkTransport` to support both subscriptions and queries: 
@@ -44,14 +36,14 @@ class Apollo {
   /// A web socket transport to use for subscriptions  
   private lazy var webSocketTransport: WebSocketTransport = {
     let url = URL(string: "ws://localhost:8080/websocket")!
-    let webSocketClient = WebSocket(url: url, protocol: .graphql_transport_ws)
-    return WebSocketTransport(websocket: webSocketClient)
+    let request = URLRequest(url: url)
+    return WebSocketTransport(request: request)
   }()
   
   /// An HTTP transport to use for queries and mutations
   private lazy var normalTransport: RequestChainNetworkTransport = {
     let url = URL(string: "http://localhost:8080/graphql")!
-    return RequestChainNetworkTransport(interceptorProvider: DefaultInterceptorProvider(store: self.store), endpointURL: url)
+    return RequestChainNetworkTransport(interceptorProvider: LegacyInterceptorProvider(), endpointURL: url)
   }()
 
   /// A split network transport to allow the use of both of the above
@@ -62,10 +54,7 @@ class Apollo {
   )
 
   /// Create a client using the `SplitNetworkTransport`.
-  private(set) lazy var client = ApolloClient(networkTransport: self.splitNetworkTransport, store: self.store)
-
-  /// A common store to use for `normalTransport` and `client`.
-  private lazy var store = ApolloStore()
+  private(set) lazy var client = ApolloClient(networkTransport: self.splitNetworkTransport)
 }
 ```
 
@@ -168,15 +157,15 @@ class Apollo {
   // initializes the connection as an authorized channel.
   private lazy var webSocketTransport: WebSocketTransport = {
     let url = URL(string: "ws://localhost:8080/websocket")!
-    let webSocketClient = WebSocket(url: url, protocol: .graphql_transport_ws)
+    let request = URLRequest(url: url)
     let authPayload = ["authToken": magicToken]
-    return WebSocketTransport(websocket: webSocketClient, connectingPayload: authPayload)
+    return WebSocketTransport(request: request, connectingPayload: authPayload)
   }()
   
   /// An HTTP transport to use for queries and mutations.
   private lazy var normalTransport: RequestChainNetworkTransport = {
     let url = URL(string: "http://localhost:8080/graphql")!
-    return RequestChainNetworkTransport(interceptorProvider: DefaultInterceptorProvider(store: self.store), endpointURL: url)
+    return RequestChainNetworkTransport(interceptorProvider: LegacyInterceptorProvider(), endpointURL: url)
   }()
 
   /// A split network transport to allow the use of both of the above
@@ -187,10 +176,7 @@ class Apollo {
   )
 
   /// Create a client using the `SplitNetworkTransport`.
-  private(set) lazy var client = ApolloClient(networkTransport: self.splitNetworkTransport, store: self.store)
-
-  /// A common store to use for `normalTransport` and `client`.
-  private lazy var store = ApolloStore()
+  private(set) lazy var client = ApolloClient(networkTransport: self.splitNetworkTransport)
 }
 ```
 
